@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Dimension by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="bootstrap/assetsF/css/main.css" />
+		<noscript><link rel="stylesheet" href="bootstrap/assetsF/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="icon fa-gem"></span>
+						</div>
+						<div class="content">
+							<div class="inner">
+								<h1>C3PWork</h1>
+								<p>Um sistema simples, eficiente e responsivo desenvolvido para ajudar no <strong>gerenciamento da sua empresa</strong><br />
+								Disponível gratuitamente e ideal para organizar produtos, controle de estoque e muito mais.</p>
+							</div>
+						</div>
+						<nav>
+							<ul style="list-style: none; padding: 0; margin: 0; text-align: center;">
+								<li><a href="#login">Logar</a></li>
+								<li><a href="#cadastro">Cadastrar</a></li>
+								<!--<li><a href="#elements">Elements</a></li>-->
+							</ul>
+              <ul style="list-style: none; padding: 0; margin: 0; text-align: center;">
+                <li style="display: inline-block; width: 100%;">
+                  <a href="index.php">Index</a>
+                </li>
+              </ul>
+
+						</nav>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- cadastro -->
+							<article id="cadastro">
+								<div class="container" id="form-container">
+									<h2>Cadastro</h2>
+									<form id="formEmpresa" method="post">
+									<label for="nome">Nome da empresa:</label><br>
+									<input type="text" id="nome" name="nome" maxlength="50" placeholder="Nome" required><br><br>
+
+									<label for="razao_social">Razão social:</label><br>
+									<input type="text" id="razao_social" name="razao_social" placeholder="Razão Social" required><br><br>
+
+									<label for="cnpj">CNPJ:</label><br>
+									<input type="text" id="cnpj" name="cnpj" placeholder="CNPJ" required><br><br>
+									<button onclick="consultarCNPJ()">Consultar CNPJ</button>
+									<div id="erro"></div><!-- arrumar depois -->
+									<pre id="resultado"></pre>
+
+									<label for="senha">Senha:</label><br>
+									<input type="text" id="senha" name="senha" placeholder="Senha" required><br><br>
+
+									<label for="data_cadastro">Data de cadastro:</label><br>
+									<input type="date" id="data_cadastro" name="data_cadastro" required><br><br>
+
+									<button value="submit">Enviar</button>
+									</form>
+
+									<!-- <a href="loginEmpresa.html">Fazer Login!</a> -->
+								</div>
+							</article>
+
+						<!-- login -->
+							<article id="login">
+								<div class="container" id="form-container">
+									<h2>Login</h2>
+									<form id="loginEmpresa" method="post">
+										<label for="nome">Cnpj da empresa:</label><br>
+										<input type="text" id="cnpj" name="cnpj" maxlength="50" placeholder="Cnpj" required
+											oninput="mascaraCNPJ(this)"><br><br>
+
+										<label for="senha">Senha:</label><br>
+										<input type="text" id="senha" name="senha" placeholder="Senha" required><br><br>
+
+										<button value="submit">Enviar</button>
+									</form>
+
+									<!-- <a href="adicionarEmpresa.html">Cadastrar empresa!</a> -->
+								</div>
+							</article>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; C3PWork <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="bootstrap/assetsF/js/jquery.min.js"></script>
+			<script src="bootstrap/assetsF/js/browser.min.js"></script>
+			<script src="bootstrap/assetsF/js/breakpoints.min.js"></script>
+			<script src="bootstrap/assetsF/js/util.js"></script>
+			<script src="bootstrap/assetsF/js/main.js"></script>
+
+
+			<script>
+    const inputData = document.getElementById('data_cadastro');
+
+    // Obter a data atual no formato yyyy-mm-dd
+    const hoje = new Date();
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
+    const ano = hoje.getFullYear();
+    const dataAtual = `${ano}-${mes}-${dia}`;
+
+    // Definir a data mínima e máxima como a data atual
+    inputData.setAttribute('min', dataAtual);
+    inputData.setAttribute('max', dataAtual);
+
+    function validarData() {
+      if (inputData.value !== dataAtual) {
+        alert("Você só pode selecionar a data de hoje.");
+        return false;
+      }
+      return true;
+    }
+
+    // Máscara para CNPJ
+    const cnpjInput = document.getElementById("cnpj");
+    cnpjInput.addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+      value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+      value = value.replace(/(\d{4})(\d)/, "$1-$2");
+      e.target.value = value;
+    });
+
+    // Função para validar CNPJ
+    function validarCNPJ(cnpj) {
+      cnpj = cnpj.replace(/[^\d]+/g, "");
+
+      if (cnpj.length !== 14) return false;
+
+      // Elimina CNPJs inválidos conhecidos
+      if (/^(\d)\1+$/.test(cnpj)) return false;
+
+      let tamanho = cnpj.length - 2;
+      let numeros = cnpj.substring(0, tamanho);
+      let digitos = cnpj.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+
+      let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(0)) return false;
+
+      tamanho += 1;
+      numeros = cnpj.substring(0, tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+
+      resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      return resultado == digitos.charAt(1);
+    }
+
+    // Função para consultar API do CNPJ
+    async function consultarCNPJ() {
+      const cnpj = cnpjInput.value.replace(/[^\d]+/g, "");
+      const nome = document.getElementById("nome");
+      const razao_social = document.getElementById("razao_social");
+      if (!validarCNPJ(cnpj)) {
+        resultado.textContent = "CNPJ inválido.";
+        return;
+      }
+
+      resultado.textContent = "Consultando dados...";
+
+      try {
+        const res = await fetch(`https://open.cnpja.com/office/${cnpj}`);
+        const data = await res.json();
+
+        if (data.status === "ERROR") {
+          resultado.textContent = "Erro: " + data.message;
+        } else {
+          //   resultado.textContent = JSON.stringify(data, null, 2);
+          nome.value = data.alias;
+          razao_social.value = data.company.name + " " + data.company.size.acronym;
+          console.log(data.alias);
+          console.log(data.company.name);
+          console.log(data.company.size.acronym);
+        }
+      } catch (error) {
+        resultado.textContent = "Erro ao consultar o CNPJ.";
+      }
+    }
+
+
+  </script>
+  <script src="assets/scripts/script_empresa.js"></script>
+
+  <script src="assets/scripts/script_loginempresa.js"></script>
+    <script>
+        function mascaraCNPJ(campo) {
+            let cnpj = campo.value.replace(/\D/g, ''); // Remove tudo que não for dígito
+
+            if (cnpj.length > 14) cnpj = cnpj.slice(0, 14); // Limita a 14 dígitos
+
+            // Aplica a máscara: 00.000.000/0000-00
+            cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2");
+            cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+            cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1/$2");
+            cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2");
+
+            campo.value = cnpj;
+        }
+    </script>
+
+	</body>
+</html>
